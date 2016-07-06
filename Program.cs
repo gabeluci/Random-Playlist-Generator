@@ -21,7 +21,7 @@ namespace Random_Playlist {
                     //use relative file names if everything is in the same folder
                     files = files.Select(f => Path.GetFileName(f));
                 }
-                files = files.Where(f => !f.EndsWith(".m3u"));
+                files = files.Where(f => !f.EndsWith(".m3u") && !f.EndsWith(".exe"));
                 files = files.OrderBy(x => rnd.Next());
 
                 File.WriteAllLines(playlistName, files.ToArray());
