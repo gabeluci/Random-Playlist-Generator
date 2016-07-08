@@ -1,7 +1,7 @@
 # Random Playlist Generator
-Creates a random M3U playlist given a directory of media files.
+A Windows command-line tool that creates a random M3U playlist given a directory of media files.
 
-This can be used for DLNA Servers that don't support random video playlists out of the box.
+When setup as a scheduled task, this can be used for DLNA Servers that don't support random video playlists out of the box.
 
 This is also a workaround for an issue Serviio has with its "Random Music" option and Sony devices, where it will only play one or two songs, then stop. With this tool, you can create your own random music playlist that Serviio will show and works just fine on Sony devices.
 
