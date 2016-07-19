@@ -2,6 +2,8 @@
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace Random_Playlist {
     enum MediaType {
@@ -9,12 +11,6 @@ namespace Random_Playlist {
         Video,
         Custom,
         Unknown
-    }
-
-    enum MaxUnit {
-        Files,
-        Minutes,
-        Hours
     }
 
     class Program {
@@ -25,10 +21,8 @@ namespace Random_Playlist {
         static void Main(string[] args) {
             var folders = new List<string>();
             string playlistName = null;
-            var alwaysUseAbsolutePath = false;
             var mediaType = MediaType.Unknown;
             var recurseFolders = false;
-            var maxUnit = MaxUnit.Files;
             var maxLength = 0;
 
             for (var i = 0; i < args.Length; i++) {
@@ -41,9 +35,6 @@ namespace Random_Playlist {
                                 i++;
                                 folders.Add(args[x]);
                             }
-                            break;
-                        case "-a":
-                            alwaysUseAbsolutePath = true;
                             break;
                         case "-r":
                             recurseFolders = true;
@@ -62,11 +53,6 @@ namespace Random_Playlist {
                         case "-m":
                             //max length
                             i++;
-                            if (args[i].EndsWith("m")) {
-                                maxUnit = MaxUnit.Minutes;
-                            } else if (args[i].EndsWith("h")) {
-                                maxUnit = MaxUnit.Hours;
-                            }
                             if (!int.TryParse(args[i], out maxLength)) {
                                 Console.WriteLine($"Unknown max length format: {args[i]}");
                                 return;
@@ -98,6 +84,13 @@ namespace Random_Playlist {
                                 }
                             }
                             break;
+                        case "-p":
+                            i++;
+                            playlistName = args[i];
+                            break;
+                        case "-h":
+                            ShowHelp();
+                            return;
                     }
                 } else {
                     if (folders.Count == 0) folders.Add(args[i].TrimEnd('\\'));
@@ -122,10 +115,10 @@ namespace Random_Playlist {
                 var files = Enumerable.Empty<string>();
                 foreach (var folder in folders) {
                     var thisFolderFiles = Directory.EnumerateFiles(folder, "*", recurseFolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-                    if (playlistFolder == folder && !alwaysUseAbsolutePath) {
-                        //use relative file name if the file is in the same folder as the playlist
-                        thisFolderFiles = thisFolderFiles.Select(f => Path.GetFileName(f));
-                    }
+                    //if (playlistFolder == folder && !alwaysUseAbsolutePath) {
+                    //    //use relative file name if the file is in the same folder as the playlist
+                    //    thisFolderFiles = thisFolderFiles.Select(f => Path.GetFileName(f));
+                    //}
                     files = files.Concat(thisFolderFiles);
                 }
                 if (mediaType == MediaType.Unknown) {
@@ -143,6 +136,7 @@ namespace Random_Playlist {
                     if (mediaType == MediaType.Unknown) {
                         //still can't figure it out
                         Console.WriteLine("The folders specified don't contain any media files.");
+                        ShowHelp();
                         return;
                     }
                 }
@@ -163,11 +157,7 @@ namespace Random_Playlist {
                 files = files.OrderBy(x => rnd.Next());
 
                 if (maxLength > 0) {
-                    switch (maxUnit) {
-                        case MaxUnit.Files:
-                            files = files.Take(maxLength);
-                            break;
-                    }
+                    files = files.Take(maxLength);
                 }
 
                 File.WriteAllLines(playlistName, files);
@@ -177,5 +167,32 @@ namespace Random_Playlist {
                 return;
             }
         }
+
+        static void ShowHelp() {
+            Console.WriteLine(@"
+Generate a random M3U playlist.
+
+Usage:
+Random.Playlist.exe [-d folder1 folder2] [-p playlistName] [-r] [-t audio|video] [-m maxLength] [-x types] [-i types] [-h]
+
+  -d    A list of folders to include, separated by spaces.
+        If this is not included, the current folder is used.
+  -p    The name of the playlist file. If not specified,
+        the playlist will be named after the first folder being searched,
+        preceded by the word Random. e.g. Random Music.m3u
+  -r    Search subfolders too.
+  -t    Specify whether to look for audio or video files. If not specified,
+        the first file found will determine if it looks for audio or video
+        files. e.g. If it comes across an audio file first, then only audio
+        files will be included.
+  -m    Limit the playlist to this many files. e.g. -m 100
+  -x    A list of file extensions to exclude, separated by semicolons.
+        e.g. -x m4a;wav
+  -i    A list of file extensions to include, separated by semicolons.
+        All other files will be ignored. e.g. -i mp3;m4a
+  -h    Show this help screen
+");
+        }
+
     }
 }
