@@ -31,3 +31,7 @@ Random.Playlist.exe [-d folder1 folder2] [-p playlistName] [-r] [-t audio|video]
 ```
 
 .NET Framework v4.0 is required. If you don't already have it, install from here: https://www.microsoft.com/en-ca/download/details.aspx?id=17851
+
+<b>Need Help?</b>
+
+Create an issue here, or ask in the Serviio forums. There is a thread for this: http://forum.serviio.org/viewtopic.php?f=17&t=22186&sid=c504f55c4ef09a6a3f4ca97fa0ec7bff
