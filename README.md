@@ -5,7 +5,7 @@ When setup as a scheduled task, this can be used for DLNA Servers that don't sup
 
 This is also a workaround for an issue Serviio has with its "Random Music" option and Sony devices, where it will only play one or two songs, then stop. With this tool, you can create your own random music playlist that Serviio will show and works just fine on Sony devices.
 
-<a href="https://github.com/gabeluci/Random-Playlist-Generator/releases/download/1.0/Random.Playlist.exe">Click here to download Random.Playlist.exe</a>
+<a href="https://github.com/gabeluci/Random-Playlist-Generator/releases/download/1.01/Random.Playlist.exe">Click here to download Random.Playlist.exe</a>
 
 <b>Usage:</b>
 ```
