@@ -160,6 +160,9 @@ namespace Random_Playlist {
                     files = files.Take(maxLength);
                 }
 
+                if (File.Exists(playlistName)) {
+                    File.Delete(playlistName);
+                }
                 File.WriteAllLines(playlistName, files);
                 Console.WriteLine($"Successfully created {playlistName}");
             } catch (Exception e) {
@@ -185,7 +188,7 @@ Random.Playlist.exe [-d folder1 folder2] [-p playlistName] [-r] [-t audio|video]
         the first file found will determine if it looks for audio or video
         files. e.g. If it comes across an audio file first, then only audio
         files will be included.
-  -m    Limit the playlist to this many files. e.g. -m 100
+  -m    Limit the playlist to a maximum of this many files. e.g. -m 100
   -x    A list of file extensions to exclude, separated by semicolons.
         e.g. -x m4a;wav
   -i    A list of file extensions to include, separated by semicolons.
